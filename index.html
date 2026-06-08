@@ -4,405 +4,1203 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Abel Atares | Data & AI</title>
-
 <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
+:root {
+  --amber: #f59e0b;
+  --amber-dim: #d97706;
+  --amber-glow: rgba(245,158,11,0.15);
+  --amber-faint: rgba(245,158,11,0.07);
+  --bg: #09090b;
+  --bg2: #111113;
+  --bg3: #18181b;
+  --bg4: #1f1f23;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(245,158,11,0.35);
+  --text: #f4f4f5;
+  --text-muted: #a1a1aa;
+  --text-dim: #71717a;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
 
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  color: #e5e7eb;
-  background: radial-gradient(circle at top, #0f172a, #020617);
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.6;
 }
 
+/* ── NOISE OVERLAY ── */
 body::before {
   content: "";
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── AMBIENT GLOW ── */
+.ambient {
   position: fixed;
-  width: 100%;
-  height: 100%;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(59,130,246,0.18), transparent 40%),
-    radial-gradient(circle at 80% 60%, rgba(147,51,234,0.12), transparent 40%);
-  z-index: -1;
+  top: -30vh; left: 50%;
+  transform: translateX(-50%);
+  width: 90vw; height: 60vh;
+  background: radial-gradient(ellipse at center, rgba(245,158,11,0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
 }
 
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(1.5rem, 5vw, 4rem);
+  height: 60px;
+  background: rgba(9,9,11,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.nav-logo span { color: var(--amber); }
+
+.nav-links {
+  display: flex; gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--amber); }
+
+/* ── LAYOUT ── */
 .container {
-  max-width: 980px;
-  margin: auto;
-  padding: 50px 20px;
+  max-width: 1020px;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 2.5rem);
+  position: relative; z-index: 1;
 }
 
-/* HEADER */
-.header {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  flex-wrap: wrap;
+section { padding: 6rem 0 0; }
+section:last-child { padding-bottom: 8rem; }
+
+/* ── SECTION HEADINGS ── */
+.section-label {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 2.5rem;
 }
 
-img {
-  width: 150px;
-  height: 150px;
+.section-label::before {
+  content: "";
+  display: block; width: 28px; height: 2px;
+  background: var(--amber);
+  flex-shrink: 0;
+}
+
+.section-label h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+/* ── HERO ── */
+#hero {
+  padding-top: 7rem;
+  padding-bottom: 2rem;
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3rem;
+  align-items: start;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 12px;
+  background: var(--amber-faint);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--amber);
+  letter-spacing: 0.04em;
+  margin-bottom: 1.5rem;
+}
+
+.hero-badge::before {
+  content: "";
+  width: 6px; height: 6px;
+  background: var(--amber);
+  border-radius: 50%;
+  animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.hero-name {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+}
+
+.hero-name em {
+  font-style: normal;
+  color: var(--amber);
+}
+
+.hero-role {
+  font-size: 1.05rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+.hero-summary {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.75;
+  max-width: 620px;
+  margin-bottom: 2rem;
+}
+
+.hero-summary strong { color: var(--text); font-weight: 500; }
+
+.hero-cta {
+  display: flex; gap: 12px; flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 22px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--amber);
+  color: #000;
+}
+
+.btn-primary:hover {
+  background: #fbbf24;
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+  border-color: var(--border-hover);
+  color: var(--text);
+  background: var(--amber-faint);
+}
+
+/* HERO PHOTO + SOCIALS */
+.hero-right {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 1.5rem;
+}
+
+.hero-photo {
+  width: 140px; height: 140px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #3b82f6;
+  border: 2px solid var(--amber);
+  box-shadow: 0 0 40px rgba(245,158,11,0.15);
+  transition: box-shadow 0.3s;
 }
 
-h1 {
-  margin: 0;
-  font-size: 40px;
+.hero-photo:hover {
+  box-shadow: 0 0 60px rgba(245,158,11,0.25);
 }
 
-.subtitle {
-  color: #60a5fa;
-  margin-top: 5px;
-}
-
-.status {
-  margin-top: 10px;
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: #1f2937;
-  color: #93c5fd;
-  font-size: 13px;
-}
-
-/* SOCIAL ICONS */
 .socials {
-  display: flex;
-  gap: 12px;
-  margin-top: 12px;
+  display: flex; gap: 10px;
 }
 
 .socials a {
-  width: 42px;
-  height: 42px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: #111827;
-  border-radius: 10px;
-
-  color: #e5e7eb;
-  font-size: 16px;
-
-  transition: 0.25s;
+  width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 15px;
   text-decoration: none;
+  transition: all 0.2s;
 }
 
 .socials a:hover {
-  background: #1f2937;
-  color: #60a5fa;
-  transform: translateY(-3px);
+  border-color: var(--border-hover);
+  color: var(--amber);
+  background: var(--amber-faint);
+  transform: translateY(-2px);
 }
 
-/* SECTIONS */
-h2 {
-  margin-top: 45px;
-  color: #60a5fa;
-}
-
-.card {
-  background: rgba(17,24,39,0.85);
-  padding: 18px;
-  border-radius: 14px;
-  margin-top: 12px;
-  backdrop-filter: blur(6px);
-}
-
-/* SUMMARY */
-.summary {
-  text-align: justify;
-  line-height: 1.7;
-}
-
-/* KEY SKILLS */
-.key-skills {
-  line-height: 1.9;
-  padding-left: 18px;
-}
-
-/* HARD SKILLS */
-.skills-grid {
+/* ── STATS ── */
+.stats-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-top: 4rem;
 }
 
-.skill-box {
-  background: #111827;
-  border-radius: 8px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.stat {
+  background: var(--bg2);
+  padding: 1.5rem;
   text-align: center;
-  font-size: 13px;
-  padding: 6px;
-  transition: 0.2s;
 }
 
-.skill-box:hover {
-  transform: scale(1.05);
-  background: #1f2937;
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--amber);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 0.3rem;
 }
 
-/* PROJECTS */
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── EXPERIENCE TIMELINE ── */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 8px; top: 8px; bottom: 8px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--amber), transparent);
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.5rem;
+  padding-bottom: 2.5rem;
+  position: relative;
+}
+
+.timeline-dot {
+  width: 17px; height: 17px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--amber);
+  flex-shrink: 0;
+  margin-top: 4px;
+  position: relative; z-index: 1;
+  transition: background 0.2s;
+}
+
+.timeline-item:first-child .timeline-dot {
+  background: var(--amber);
+}
+
+.timeline-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  transition: border-color 0.25s, background 0.25s;
+}
+
+.timeline-card:hover {
+  border-color: var(--border-hover);
+  background: var(--bg3);
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.timeline-role {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.timeline-company {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--amber);
+  margin-top: 2px;
+}
+
+.timeline-meta {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.timeline-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  display: block;
+}
+
+.timeline-location {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+  display: block;
+}
+
+.timeline-bullets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 0.75rem;
+}
+
+.timeline-bullets li {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  padding-left: 1.1rem;
+  position: relative;
+  line-height: 1.55;
+}
+
+.timeline-bullets li::before {
+  content: "→";
+  position: absolute; left: 0;
+  color: var(--amber);
+  font-size: 0.75rem;
+  top: 2px;
+}
+
+/* ── SKILLS ── */
+.skills-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.skills-group {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.skills-group-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--amber);
+  margin-bottom: 1rem;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.73rem;
+  padding: 4px 10px;
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  transition: all 0.15s;
+}
+
+.tag:hover {
+  border-color: var(--border-hover);
+  color: var(--text);
+  background: var(--amber-faint);
+}
+
+.tag.highlight {
+  border-color: rgba(245,158,11,0.25);
+  color: var(--amber);
+  background: var(--amber-faint);
+}
+
+/* ── PROJECTS ── */
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
 }
 
 .project-card {
-  background: #111827;
-  padding: 16px;
-  border-radius: 12px;
-  transition: 0.25s;
-  border: 1px solid rgba(255,255,255,0.05);
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  display: flex; flex-direction: column;
+  transition: border-color 0.25s, transform 0.25s, background 0.25s;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at top left, var(--amber-faint) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .project-card:hover {
-  transform: translateY(-5px);
-  border-color: #3b82f6;
+  border-color: var(--border-hover);
+  transform: translateY(-4px);
+  background: var(--bg3);
 }
 
-.project-title {
-  font-size: 15px;
-  font-weight: bold;
-  margin-bottom: 8px;
-  color: #93c5fd;
+.project-card:hover::before { opacity: 1; }
+
+.project-icon {
+  font-size: 1.25rem;
+  color: var(--amber);
+  margin-bottom: 0.75rem;
+}
+
+.project-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
 }
 
 .project-desc {
-  font-size: 13px;
-  line-height: 1.5;
-  color: #cbd5e1;
+  font-size: 0.825rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  flex: 1;
 }
 
-.project-card a {
-  display: inline-block;
-  margin-top: 10px;
-  font-size: 13px;
-  color: #60a5fa;
+.project-stack {
+  display: flex; flex-wrap: wrap; gap: 5px;
+  margin-top: 1rem;
+}
+
+.project-stack span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.67rem;
+  padding: 2px 7px;
+  background: var(--bg4);
+  border-radius: 4px;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+
+.project-link {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--amber);
+  display: flex; align-items: center; gap: 5px;
+  transition: gap 0.2s;
+}
+
+.project-card:hover .project-link { gap: 8px; }
+
+/* ── EDUCATION ── */
+.edu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.edu-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: border-color 0.2s;
+}
+
+.edu-card:hover { border-color: var(--border-hover); }
+
+.edu-degree {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.3rem;
+}
+
+.edu-school {
+  font-size: 0.85rem;
+  color: var(--amber);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.edu-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+/* ── CERTS ── */
+.certs-list {
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+.cert-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  transition: border-color 0.2s;
+}
+
+.cert-item:hover { border-color: var(--border-hover); }
+
+.cert-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--amber);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.cert-name {
+  font-size: 0.875rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.cert-org {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem clamp(1.25rem, 4vw, 2.5rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.footer-links {
+  display: flex; gap: 1.5rem;
+}
+
+.footer-links a {
+  font-size: 0.8rem;
+  color: var(--text-dim);
   text-decoration: none;
+  transition: color 0.2s;
 }
 
-.project-card a:hover {
-  text-decoration: underline;
+.footer-links a:hover { color: var(--amber); }
+
+/* ── ANIMATIONS ── */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-right { align-items: flex-start; flex-direction: row; }
+  .stats-row { grid-template-columns: repeat(2,1fr); }
+  .skills-section { grid-template-columns: 1fr; }
+  .edu-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+}
 </style>
 </head>
-
 <body>
+
+<div class="ambient"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">Abel<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+  </ul>
+</nav>
 
 <div class="container">
 
-  <!-- HEADER -->
-  <div class="header">
-    <img src="foto.png" alt="Abel">
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">Open to Data / AI roles in Dublin 🇮🇪</div>
+        <h1 class="hero-name">Abel<br>Atares <em>de Sus</em></h1>
+        <p class="hero-role">Data Specialist & Mathematician · 5+ years</p>
+	<p class="hero-summary">
+  	Data & AI Engineer with 5+ years of experience delivering scalable data solutions and products across Finance, AI, Banking, Consulting, Healthcare & 	Education.Strong expertise in <strong>Python</strong> and <strong>SQL</strong>, with experience in <strong>Machine Learning</strong>, data pipelines 	(<strong>ETL/ELT</strong>), automation and <strong>API development</strong>. Skilled in cloud and data platforms including <strong>	Azure</strong>, <strong>Databricks</strong> and <strong>Snowflake</strong>, as well as 	<strong>Docker</strong> for containerized workflows. 	Experienced in data visualization and reporting with <strong>Power BI</strong> and <strong>Tableau</strong>, focused on building reliable, high-	impact data-driven systems.
+	</p>
+        <div class="hero-cta">
+          <a href="mailto:abelatares@gmail.com" class="btn btn-primary">
+            <i class="fas fa-envelope"></i> Get in touch
+          </a>
+          <a href="https://www.linkedin.com/in/abelatares" target="_blank" class="btn btn-ghost">
+            <i class="fab fa-linkedin"></i> LinkedIn
+          </a>
+          <a href="https://github.com/AbelAtares" target="_blank" class="btn btn-ghost">
+            <i class="fab fa-github"></i> GitHub
+          </a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <img src="foto.png" alt="Abel Atares" class="hero-photo">
+        <div class="socials">
+          <a href="mailto:abelatares@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+          <a href="tel:+353852109182" title="Phone"><i class="fas fa-phone"></i></a>
+          <a href="https://www.linkedin.com/in/abelatares" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <a href="https://github.com/AbelAtares" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+    </div>
 
-    <div>
-      <h1>Abel Atares de Sus</h1>
+    <!-- Stats -->
+    <div class="stats-row fade-in">
+      <div class="stat">
+        <div class="stat-num">5+</div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">6</div>
+        <div class="stat-label">Industries</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">10+</div>
+        <div class="stat-label">Projects on GitHub</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">6</div>
+        <div class="stat-label">Certifications</div>
+      </div>
+    </div>
+  </section>
 
-      <div class="subtitle">
-        Data Analysis & Science | AI | Machine Learning | SQL & Python | Mathematics
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="section-label">
+      <h2>Work Experience</h2>
+    </div>
+    <div class="timeline">
+    
+      <!-- IES Mor de Fuentes -->
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div>
+              <div class="timeline-role">Computer Science Instructor — Higher Ed</div>
+              <div class="timeline-company">IES Mor de Fuentes</div>
+            </div>
+            <div class="timeline-meta">
+              <span class="timeline-date">Nov 2025 – Mar 2026</span>
+              <span class="timeline-location">Monzón, Spain</span>
+            </div>
+          </div>
+          <ul class="timeline-bullets">
+            <li>Delivered web development skills using HTML, CSS, JavaScript and PHP.</li>
+            <li>Delivered applied computer science competencies in programming, data analysis and databases.</li>
+            <li>Mentored students in hands-on projects using Python and SQL, fostering a results-oriented, analytical and collaborative mindset.</li>
+          </ul>
+        </div>
+
+      </div><!-- CaixaBank -->
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div>
+              <div class="timeline-role">Senior Data Analyst</div>
+              <div class="timeline-company">CaixaBank</div>
+            </div>
+            <div class="timeline-meta">
+              <span class="timeline-date">Jan 2025 – Nov 2025</span>
+              <span class="timeline-location">Barcelona, Spain</span>
+            </div>
+          </div>
+          <ul class="timeline-bullets">
+            <li>Led a 4-person Infrastructure Team within the IT Department.</li>
+            <li>Managed monthly reporting operations, reducing processing time by 55% through workflow optimization.</li>
+            <li>Processed and analyzed large datasets using Python, SQL and XML to generate actionable insights.</li>
+            <li>Developed scalable ETL data pipelines in Oracle Data Warehouse environments, implementing CI/CD practices to enhance efficiency and data reliability.</li>
+            <li>Designed and delivered interactive Power BI and Tableau dashboards to support data-driven decision-making and communicate insights.</li>
+          </ul>
+        </div>
       </div>
 
-      <div class="status">
-        Open to Data / AI roles in Dublin 🇮🇪
+      <!-- Outlier -->
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div>
+              <div class="timeline-role">AI Data Engineer — Evaluation</div>
+              <div class="timeline-company">Outlier</div>
+            </div>
+            <div class="timeline-meta">
+              <span class="timeline-date">Aug 2023 – Dec 2024</span>
+              <span class="timeline-location">Oakland, US (Remote)</span>
+            </div>
+          </div>
+          <ul class="timeline-bullets">
+            <li>Improved model behavior, accuracy and reliability through structured evaluation and prompt optimization techniques.</li>
+            <li>Specialized in data quality validation and ethical compliance, applying systematic QA, A/B testing and other methodologies to detect issues, verify fixes and ensure output consistency.</li>
+            <li>Contributed to model evaluation workflows, ensuring high-quality datasets, ethical alignment and stable performance across testing pipelines.</li>
+          </ul>
+        </div>
       </div>
 
-      <div class="socials">
+      <!-- Deloitte -->
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div>
+              <div class="timeline-role">Data Analyst</div>
+              <div class="timeline-company">Deloitte</div>
+            </div>
+            <div class="timeline-meta">
+              <span class="timeline-date">Jun 2022 – Jul 2023</span>
+              <span class="timeline-location">Huesca, Spain</span>
+            </div>
+          </div>
+          <ul class="timeline-bullets">
+            <li>Designed, developed and deployed scalable Workday integrations (inbound & outbound) across multiple modules.</li>
+            <li>Built client-specific solutions using Workday Studio, EIB, XML, Reports, Core Connectors, PECI & Web Services (SOAP, REST).</li>
+            <li>Translated complex business requirements into efficient technical solutions, ensuring data accuracy and seamless system integration.</li>
+            <li>Worked across HCM, Recruiting, Time Tracking, Compensation, Security and Reporting modules.</li>
+            <li>Applied strong problem-solving skills in client-facing environments to resolve technical and operational challenges.</li>
+          </ul>
+        </div>
+      </div>
 
-        <a href="mailto:abelatares@gmail.com">
-          <i class="fas fa-envelope"></i>
-        </a>
+      <!-- Bosphorus Bariatrics -->
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div>
+              <div class="timeline-role">Data Analyst</div>
+              <div class="timeline-company">Bosphorus Bariatrics</div>
+            </div>
+            <div class="timeline-meta">
+              <span class="timeline-date">Jun 2021 – Jun 2022</span>
+              <span class="timeline-location">Istanbul, Türkiye</span>
+            </div>
+          </div>
+          <ul class="timeline-bullets">
+            <li>Managed global customer data using SQL queries and Excel/Google Sheets.</li>
+            <li>Designed and managed databases, contributing to data modeling and database design.</li>
+            <li>Created dashboards and visualizations to support strategic planning and optimize customer management strategies.</li>
+          </ul>
+        </div>
+      </div>
 
-        <a href="tel:+353852109182">
-          <i class="fas fa-phone"></i>
-        </a>
-
-        <a href="https://www.linkedin.com/in/abelatares" target="_blank">
-          <i class="fab fa-linkedin"></i>
-        </a>
-
-        <a href="https://github.com/AbelAtares" target="_blank">
-          <i class="fab fa-github"></i>
-        </a>
-
+      <!-- Agora -->
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div>
+              <div class="timeline-role">Science & Mathematics Teacher</div>
+              <div class="timeline-company">Agora Study Center</div>
+            </div>
+            <div class="timeline-meta">
+              <span class="timeline-date">Nov 2020 – Jun 2021</span>
+              <span class="timeline-location">Zaragoza, Spain</span>
+            </div>
+          </div>
+          <ul class="timeline-bullets">
+            <li>Provided science instruction to high school, covering mathematics, physics, chemistry and biology.</li>
+            <li>Trained university students in mathematics subjects such as Calculus, Linear Algebra, Time Series, Statistics and Probability, helping them strengthen their analytical thinking and problem-solving skills.</li>
+          </ul>
+        </div>
       </div>
 
     </div>
-  </div>
+  </section>
 
-  <!-- SUMMARY -->
-  <h2>Summary</h2>
-  <div class="card summary">
-    Data Specialist & Mathematician with 5+ years of experience across Finance, AI, Banking, Consulting, Healthcare & Education.
-    Proven track record in data analysis, data science, data visualization and Workday implementation.
-    Strong background in AI development, model training, prompt engineering and data analysis.
-    Proficient in Python, SQL, Power BI, Tableau and cloud platforms such as Azure, Snowflake and Databricks.
-    Passionate about continuous learning and expanding expertise in data science, advanced analytics and emerging AI & ML technologies to develop innovative and data-driven solutions.
-  </div>
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-label">
+      <h2>Technical Skills</h2>
+    </div>
+    <div class="skills-section">
 
-  <!-- KEY SKILLS -->
-  <h2>Key Skills</h2>
-  <div class="card">
-    <ul class="key-skills">
-      <li>Machine learning & AI concepts</li>
-      <li>Python</li>
-      <li>SQL / Databases</li>
-      <li>Data Analysis & Visualization</li>
-      <li>Mathematical reasoning</li>
-      <li>Critical thinking & problem solving</li>
-      <li>Agile / Scrum teamwork</li>
-      <li>Fast learner in new technologies</li>
-    </ul>
-  </div>
+      <div class="skills-group fade-in">
+        <div class="skills-group-title">// Languages & Core</div>
+        <div class="skill-tags">
+          <span class="tag highlight">Python</span>
+          <span class="tag highlight">SQL</span>
+          <span class="tag highlight">R</span>
+          <span class="tag">MATLAB</span>
+          <span class="tag">C / C++</span>
+          <span class="tag">XML / XSLT</span>
+          <span class="tag">JSON</span>
+          <span class="tag">GraphQL</span>
+        </div>
+      </div>
 
-  <!-- HARD SKILLS -->
-  <h2>Hard Skills</h2>
-  <div class="card">
-    <div class="skills-grid">
+      <div class="skills-group fade-in">
+        <div class="skills-group-title">// ML & AI</div>
+        <div class="skill-tags">
+          <span class="tag highlight">PyTorch</span>
+          <span class="tag highlight">XGBoost</span>
+          <span class="tag highlight">Scikit-learn</span>
+          <span class="tag">TensorFlow</span>
+          <span class="tag">Hugging Face</span>
+          <span class="tag">Prompt Engineering</span>
+          <span class="tag">RAG</span>
+          <span class="tag">LLM Evaluation</span>
+          <span class="tag">AI Agents</span>
+        </div>
+      </div>
 
-      <div class="skill-box">Python</div>
-      <div class="skill-box">NumPy</div>
-      <div class="skill-box">Pandas</div>
-      <div class="skill-box">Matplotlib</div>
-      <div class="skill-box">Seaborn</div>
-      <div class="skill-box">Scikit-learn</div>
-      <div class="skill-box">PyTorch</div>
-      <div class="skill-box">TensorFlow</div>
+      <div class="skills-group fade-in">
+        <div class="skills-group-title">// Data & Libraries</div>
+        <div class="skill-tags">
+          <span class="tag highlight">Pandas</span>
+          <span class="tag highlight">NumPy</span>
+          <span class="tag highlight">FastAPI</span>
+          <span class="tag">Polars</span>
+          <span class="tag">PySpark</span>
+          <span class="tag">dbt</span>
+          <span class="tag">Airflow</span>
+          <span class="tag">Matplotlib</span>
+          <span class="tag">Seaborn</span>
+        </div>
+      </div>
 
-      <div class="skill-box">SQL</div>
-      <div class="skill-box">R</div>
-      <div class="skill-box">Power BI</div>
-      <div class="skill-box">Tableau</div>
+      <div class="skills-group fade-in">
+        <div class="skills-group-title">// Cloud & Infra</div>
+        <div class="skill-tags">
+          <span class="tag highlight">Azure</span>
+          <span class="tag highlight">Snowflake</span>
+          <span class="tag highlight">Docker</span>
+          <span class="tag highlight">Databricks</span>
+          <span class="tag highlight">Git / GitHub</span>
+          <span class="tag highlight">CI/CD</span>
+          <span class="tag">AWS Fundamentals</span>
+          <span class="tag">Delta Lake</span>
+          <span class="tag">Spark SQL</span>
+          <span class="tag">Linux</span>
+        </div>
+      </div>
 
-      <div class="skill-box">Workday</div>
-      <div class="skill-box">Workday Studio</div>
+      <div class="skills-group fade-in">
+        <div class="skills-group-title">// BI & Visualization</div>
+        <div class="skill-tags">
+          <span class="tag highlight">Power BI</span>
+          <span class="tag highlight">Tableau</span>
+          <span class="tag">Jupyter Notebook</span>
+        </div>
+      </div>
 
-      <div class="skill-box">GitHub</div>
-      <div class="skill-box">Git</div>
-
-      <div class="skill-box">Snowflake</div>
-      <div class="skill-box">Azure</div>
-      <div class="skill-box">Databricks</div>
-
-      <div class="skill-box">Docker</div>
-      <div class="skill-box">Hugging Face</div>
-      <div class="skill-box">Jupyter Notebook</div>
-
-      <div class="skill-box">Microsoft / Google Office</div>
-      <div class="skill-box">Salesforce</div>
-
-      <div class="skill-box">XML</div>
-      <div class="skill-box">XSLT</div>
-      <div class="skill-box">JSON</div>
-
-      <div class="skill-box">Matlab</div>
-      <div class="skill-box">C / C++</div>
-      <div class="skill-box">GraphQL</div>
-
-      <div class="skill-box">Jira</div>
-      <div class="skill-box">Confluence</div>
-
-      <div class="skill-box">API Integration</div>
-      <div class="skill-box">ETL Processes</div>
-      <div class="skill-box">Data Pipelines</div>
+      <div class="skills-group fade-in">
+        <div class="skills-group-title">// Enterprise & Tools</div>
+        <div class="skill-tags">
+          <span class="tag highlight">Workday</span>
+          <span class="tag">Workday Studio</span>
+          <span class="tag">Salesforce</span>
+          <span class="tag">Jira</span>
+          <span class="tag">Confluence</span>
+          <span class="tag">REST / SOAP APIs</span>
+        </div>
+      </div>
 
     </div>
-  </div>
+  </section>
 
-  <!-- PROJECTS (ADDED ONLY) -->
-  <h2>Projects</h2>
-  <div class="card">
-
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-label">
+      <h2>Projects</h2>
+    </div>
     <div class="projects-grid">
 
-      <div class="project-card">
-        <div class="project-title">Image Recognition Project FastAPI Docker</div>
-        <div class="project-desc">
-          Building an end-to-end image recognition system with PyTorch, FastAPI and Docker.
+      <a href="https://github.com/AbelAtares/Image-Recognition-Project-FastAPI-Docker" target="_blank" class="project-card fade-in">
+        <div class="project-icon"><i class="fas fa-eye"></i></div>
+        <div class="project-name">Image Recognition · FastAPI & Docker</div>
+        <p class="project-desc">End-to-end image recognition system with production-ready API and containerized deployment.</p>
+        <div class="project-stack">
+          <span>PyTorch</span><span>FastAPI</span><span>Docker</span>
         </div>
-        <a href="https://github.com/AbelAtares/Image-Recognition-Project-FastAPI-Docker" target="_blank">
-          View Project →
-        </a>
+        <div class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="https://github.com/AbelAtares/Neural-Network-Digit-Recognition-MNIST" target="_blank" class="project-card fade-in">
+        <div class="project-icon"><i class="fas fa-brain"></i></div>
+        <div class="project-name">MNIST Neural Network from Scratch</div>
+        <p class="project-desc">Handwritten digit recognition building a neural network using only NumPy — no ML frameworks.</p>
+        <div class="project-stack">
+          <span>NumPy</span><span>Python</span>
+        </div>
+        <div class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="https://github.com/AbelAtares/This-Is-Football" target="_blank" class="project-card fade-in">
+        <div class="project-icon"><i class="fas fa-futbol"></i></div>
+        <div class="project-name">This is Football</div>
+        <p class="project-desc">Comprehensive ML project focused on football data analysis, feature engineering and match prediction.</p>
+        <div class="project-stack">
+          <span>Python</span><span>Scikit-learn</span><span>Pandas</span>
+        </div>
+        <div class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="https://github.com/AbelAtares/US-Emissions-Analytics-Dashboards-Databricks" target="_blank" class="project-card fade-in">
+        <div class="project-icon"><i class="fas fa-chart-area"></i></div>
+        <div class="project-name">US Emissions Dashboard · Databricks</div>
+        <p class="project-desc">Interactive analytics dashboard analyzing US greenhouse gas emissions trends at scale.</p>
+        <div class="project-stack">
+          <span>Databricks</span><span>Spark SQL</span><span>Delta Lake</span>
+        </div>
+        <div class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="https://github.com/AbelAtares/XGBoost-For-Student-Performance-Prediction" target="_blank" class="project-card fade-in">
+        <div class="project-icon"><i class="fas fa-graduation-cap"></i></div>
+        <div class="project-name">Student Performance · XGBoost</div>
+        <p class="project-desc">Predicting academic outcomes with XGBoost vs baseline models. Feature importance analysis included.</p>
+        <div class="project-stack">
+          <span>XGBoost</span><span>Pandas</span><span>Python</span>
+        </div>
+        <div class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="https://github.com/AbelAtares/Breast-Cancer-Logistic-Regression" target="_blank" class="project-card fade-in">
+        <div class="project-icon"><i class="fas fa-microscope"></i></div>
+        <div class="project-name">Breast Cancer Classification</div>
+        <p class="project-desc">Logistic regression model for tumor classification with full evaluation metrics and ROC analysis.</p>
+        <div class="project-stack">
+          <span>Scikit-learn</span><span>Python</span>
+        </div>
+        <div class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a href="https://github.com/AbelAtares/Delaney-Solubility-Descriptors-Linear-Regression-Random-Forest" target="_blank" class="project-card fade-in">
+        <div class="project-icon"><i class="fas fa-flask"></i></div>
+        <div class="project-name">Molecular Solubility Prediction</div>
+        <p class="project-desc">ML models predicting chemical solubility (logS) using molecular descriptors. Linear Regression vs Random Forest.</p>
+        <div class="project-stack">
+          <span>Scikit-learn</span><span>RDKit</span><span>Python</span>
+        </div>
+        <div class="project-link">View on GitHub <i class="fas fa-arrow-right"></i></div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education">
+    <div class="section-label">
+      <h2>Education</h2>
+    </div>
+    <div class="edu-grid fade-in">
+
+      <div class="edu-card">
+        <div class="edu-degree">BSc (Hons) in Mathematics</div>
+        <div class="edu-school">University of Zaragoza</div>
+        <div class="edu-meta">Zaragoza, Spain · 2016 – 2020</div>
       </div>
 
-      <div class="project-card">
-        <div class="project-title">MNIST Neural Network</div>
-        <div class="project-desc">
-          Handwritten digit recognition using NumPy neural network from scratch.
-        </div>
-        <a href="https://github.com/AbelAtares/Neural-Network-Digit-Recognition-MNIST" target="_blank">
-          View Project →
-        </a>
-      </div>
-
-      <div class="project-card">
-        <div class="project-title">This is Football</div>
-        <div class="project-desc">
-          A comprehensive machine learning project focused on football data analysis and prediction.
-        </div>
-        <a href="https://github.com/AbelAtares/This-Is-Football" target="_blank">
-          View Project →
-        </a>
-      </div>
-
-      <div class="project-card">
-        <div class="project-title">US Emissions Dashboard</div>
-        <div class="project-desc">
-          Interactive Databricks dashboard analyzing US greenhouse gas emissions.
-        </div>
-        <a href="https://github.com/AbelAtares/US-Emissions-Analytics-Dashboards-Databricks" target="_blank">
-          View Project →
-        </a>
-      </div>
-
-      <div class="project-card">
-        <div class="project-title">Student Performance (XGBoost)</div>
-        <div class="project-desc">
-          Predicting academic performance using XGBoost vs baseline models.
-        </div>
-        <a href="https://github.com/AbelAtares/XGBoost-For-Student-Performance-Prediction" target="_blank">
-          View Project →
-        </a>
-      </div>
-
-      <div class="project-card">
-        <div class="project-title">Molecular Solubility Prediction</div>
-        <div class="project-desc">
-          Machine learning models predicting chemical solubility (logS).
-        </div>
-        <a href="https://github.com/AbelAtares/Delaney-Solubility-Descriptors-Linear-Regression-Random-Forest" target="_blank">
-          View Project →
-        </a>
-      </div>
-
-      <div class="project-card">
-        <div class="project-title">Breast Cancer Classification</div>
-        <div class="project-desc">
-          Logistic regression model for tumor classification.
-        </div>
-        <a href="https://github.com/AbelAtares/Breast-Cancer-Logistic-Regression" target="_blank">
-          View Project →
-        </a>
+      <div class="edu-card">
+        <div class="edu-degree">Erasmus+ · BSc (Hons) in Mathematics</div>
+        <div class="edu-school">University of Düzce</div>
+        <div class="edu-meta">Düzce, Türkiye · 2019 – 2020</div>
       </div>
 
     </div>
 
-  </div>
+    <!-- Certifications -->
+    <div style="margin-top: 2rem;">
+      <div class="section-label">
+        <h2>Certifications</h2>
+      </div>
+      <div class="certs-list fade-in">
+        <div class="cert-item">
+          <div class="cert-dot"></div>
+          <div>
+            <div class="cert-name">Machine Learning Specialization</div>
+            <div class="cert-org">Stanford University</div>
+          </div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-dot"></div>
+          <div>
+            <div class="cert-name">Python for Data Science, AI & Development</div>
+            <div class="cert-org">IBM</div>
+          </div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-dot"></div>
+          <div>
+            <div class="cert-name">Databases and SQL for Data Science with Python</div>
+            <div class="cert-org">IBM</div>
+          </div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-dot"></div>
+          <div>
+            <div class="cert-name">Workday HCM Core Concepts</div>
+            <div class="cert-org">Workday</div>
+          </div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-dot"></div>
+          <div>
+            <div class="cert-name">Workday Integration Core Concepts</div>
+            <div class="cert-org">Workday</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-</div>
+    <!-- Languages -->
+    <div style="margin-top: 2.5rem; display: flex; gap: 12px; flex-wrap: wrap;">
+      <div style="background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.75rem 1.25rem; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.1rem;">🇪🇸</span>
+        <div>
+          <div style="font-size: 0.85rem; font-weight: 500; color: var(--text);">Spanish</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--text-dim);">Native</div>
+        </div>
+      </div>
+      <div style="background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.75rem 1.25rem; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.1rem;">🇬🇧</span>
+        <div>
+          <div style="font-size: 0.85rem; font-weight: 500; color: var(--text);">English</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--text-dim);">Fluent</div>
+        </div>
+      </div>
+      <div style="background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.75rem 1.25rem; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.1rem;">🇫🇷</span>
+        <div>
+          <div style="font-size: 0.85rem; font-weight: 500; color: var(--text);">French</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--text-dim);">Basic</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+</div><!-- /container -->
+
+<footer>
+  <div class="footer-text">© 2026 Abel Atares de Sus · Dublin 🇮🇪</div>
+  <div class="footer-links">
+    <a href="mailto:abelatares@gmail.com">abelatares@gmail.com</a>
+    <a href="tel:+353852109182">+353 852 109 182</a>
+    <a href="https://github.com/AbelAtares" target="_blank">GitHub</a>
+    <a href="https://www.linkedin.com/in/abelatares" target="_blank">LinkedIn</a>
+  </div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
 
 </body>
 </html>
